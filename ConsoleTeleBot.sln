@@ -12,6 +12,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTeleBotMaster", "Con
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{86D150DB-CB69-47D3-94BD-8B8BC6D8BF45}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleMock", "ConsoleMock\ConsoleMock.csproj", "{B61FF572-A77B-48DF-BFDC-0970599BF387}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,10 @@ Global
 		{86D150DB-CB69-47D3-94BD-8B8BC6D8BF45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86D150DB-CB69-47D3-94BD-8B8BC6D8BF45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86D150DB-CB69-47D3-94BD-8B8BC6D8BF45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B61FF572-A77B-48DF-BFDC-0970599BF387}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B61FF572-A77B-48DF-BFDC-0970599BF387}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B61FF572-A77B-48DF-BFDC-0970599BF387}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B61FF572-A77B-48DF-BFDC-0970599BF387}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
