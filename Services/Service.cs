@@ -2,20 +2,20 @@
 using System.Text.RegularExpressions;
 using Telegram.Bot;
 
-namespace ConsoleTeleBot;
+namespace Services;
 
 public class Service
 {
     public async Task ParseAndSend(Process process1, List<ParsingRule> queryProcessings, TelegramBotClient telegramBotClient,
-        AppConfig appConfig, CancellationTokenSource cancellationTokenSource)
+        string? chatId, CancellationTokenSource cancellationTokenSource)
     {
         var line = process1.StandardOutput.ReadLine();
         Console.WriteLine(line);
         if (line is not null)
         {
-            var queryProcessingRecord = queryProcessings.FirstOrDefault(qp => line.Contains(qp.ConsoleOutput));
+            var queryProcessingRecord = queryProcessings.FirstOrDefault(qp => qp.ConsoleOutput != null && line.Contains(qp.ConsoleOutput));
 
-            if (queryProcessingRecord != null)
+            if (queryProcessingRecord?.RegexPattern != null)
             {
                 var match = Regex.Match(line, queryProcessingRecord.RegexPattern);
                 if (match.Success)
@@ -26,16 +26,18 @@ public class Service
                         replacements.Add($"{{m.Groups[{i}].Value}}", match.Groups[i].Value);
                     }
 
-                    string result = queryProcessingRecord.Result;
+                    var result = queryProcessingRecord.Result;
                     foreach (var replacement in replacements)
                     {
-                        result = result.Replace(replacement.Key, replacement.Value);
+                        result = result?.Replace(replacement.Key, replacement.Value);
                     }
 
                     if (!string.IsNullOrWhiteSpace(result))
                     {
-                        await telegramBotClient.SendTextMessageAsync(appConfig.BotConfig.ChatId, result, disableNotification: queryProcessingRecord.QuietMessage,
-                            cancellationToken: cancellationTokenSource.Token);
+                        if (chatId != null)
+                            await telegramBotClient.SendTextMessageAsync(chatId, result,
+                                disableNotification: queryProcessingRecord.QuietMessage,
+                                cancellationToken: cancellationTokenSource.Token);
                     }
                 }
             }

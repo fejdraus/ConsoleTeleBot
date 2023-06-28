@@ -1,0 +1,38 @@
+{
+  "executable": "ConsoleTeleBotMaster",
+  "splashscreen": {
+    "imageFile": ""
+  },
+  "name": "ConsoleTeleBotMaster",
+  "author": "Oleksandr Tyra",
+  "singleInstance": true,
+  "environment": "Production",
+  "build": {
+    "appId": "com.ConsoleTeleBotMaster.app",
+    "productName": "ConsoleTeleBotMaster",
+    "copyright": "Copyright © 2023. Oleksandr Tyra, All Rights Reserved.",
+    "buildVersion": "1.0.0",
+    "compression": "maximum",
+    "directories": {
+      "output": "../../../bin/Desktop"
+    },
+    "extraResources": [
+      {
+        "from": "./bin",
+        "to": "bin",
+        "filter": [ "**/*" ]
+      }
+    ],
+    "files": [
+      {
+        "from": "./ElectronHostHook/node_modules",
+        "to": "ElectronHostHook/node_modules",
+        "filter": [ "**/*" ]
+      },
+      "**/*"
+    ],
+    "win": {
+      "icon": "../../../wwwroot/favicon.ico"
+    }
+  }
+}
