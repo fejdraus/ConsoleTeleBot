@@ -1,8 +1,8 @@
 # ConsoleTeleBot
-Для запуска Electron.Net версию "Мастера настройки", необходимо выпонить в папке проекта ConsoleTeleBotMaster команду:
+To run the Electron.Net version of the "Setup Wizard", you need to run the following command in the ConsoleTeleBotMaster project folder:
 dotnet electronize start
 
-Для того что бы собрать Electron.Net версию "Мастера настройки" для разных ОС, необходимо выполнить команды:
+In order to build the Electron.Net version of the "Configuration Wizard" for different operating systems, you need to run the following commands:
 dotnet electronize build /target win
 dotnet electronize build /target osx
 dotnet electronize build /target linux
