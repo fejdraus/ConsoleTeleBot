@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.Forms;
+﻿using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Services;
@@ -7,11 +6,6 @@ using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
 
 namespace ConsoleTeleBotMaster.Data;
-
-using System;
-using System.IO;
-using Microsoft.AspNetCore.Hosting;
-
 public class DatabaseService
 {
     private readonly IWebHostEnvironment _env;
@@ -38,7 +32,7 @@ public class DatabaseService
 
         foreach (var sourceFileName in sourceFileNames)
         {
-            var sourceFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, sourceFileName);
+            var sourceFilePath = Path.Combine(_env.ContentRootPath, sourceFileName);
             var targetFilePath = Path.Combine(_env.WebRootPath, sourceFileName);
         
             if (File.Exists(targetFilePath))
@@ -112,7 +106,6 @@ public class DatabaseService
         {
             GC.Collect();
             GC.WaitForPendingFinalizers();
-            //File.Delete(tempFilePath);
         }
         return error;
     }

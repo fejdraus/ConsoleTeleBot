@@ -1,4 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ConsoleTeleBot;
+using Hangfire;
+using Hangfire.MemoryStorage;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Services;
@@ -10,17 +14,29 @@ IConfiguration GetConfiguration(string fileName)
         .AddJsonFile(fileName)
         .Build();
 }
-IServiceProvider ConfigureService(IConfiguration configuration)
-{
-    var services = new ServiceCollection();
-    services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlite(configuration.GetConnectionString("DbConnection")));
-    return services.BuildServiceProvider();
-}
+
 var appSettingsConfiguration = GetConfiguration("appsettings.json");
-var settingsConfiguration = GetConfiguration("ConsoleTeleBotSettings.json").Get<AppConfig>();
-var serviceProvider = ConfigureService(appSettingsConfiguration);
-using var scope = serviceProvider.CreateScope();
+var configService = new ConfigService();
+var settingsConfiguration = await configService.GetAppConfig();
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton(settingsConfiguration);
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlite(appSettingsConfiguration.GetConnectionString("DbConnection")));
+builder.Services.AddHangfire(config => config.UseMemoryStorage());
+builder.Services.AddHangfireServer();
+var app = builder.Build();
+
+using var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 var startBot = new StartBot(context, settingsConfiguration);
-await startBot.Execute();
+
+app.UseHangfireDashboard("/planner", new DashboardOptions {
+    DashboardTitle = "ConsoleTeleBot",
+    AppPath = "/planner",
+    Authorization = new[] { new HangfireOpenAuthorizationFilter() }
+});
+
+await BotRun.Execute(settingsConfiguration, startBot, app);
+
+app.Run();
