@@ -84,7 +84,7 @@ public class ElectronUi
                         {
                             var options = new MessageBoxOptions("Author: Oleksandr Tyra\n" +
                                                                 "Email: a.tyra@banzait.com\n" +
-                                                                "Version: 1.0.0\n" +
+                                                                "Version: 1.0.1\n" +
                                                                 "Product name: ConsoleTeleBot\n" +
                                                                 "Copyright: Copyright © 2023. Oleksandr Tyra, All Rights Reserved.\n" +
                                                                 "License: AGPL-3.0")

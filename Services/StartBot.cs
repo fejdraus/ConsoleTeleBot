@@ -1,4 +1,8 @@
-﻿namespace Services;
+﻿using Telegram.Bot.Exceptions;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
+
+namespace Services;
 
 using System.Diagnostics;
 using Telegram.Bot;
@@ -44,11 +48,25 @@ public class StartBot
             var queryProcessing = _applicationDbContext.ParsingRules.ToList();
             _chatId = string.IsNullOrWhiteSpace(_botToken) ? "" : _chatId;
             var botClient = new TelegramBotClient(_botToken);
-            while (!process.StandardOutput.EndOfStream)
-            {
-                await service.ParseAndSend(process, queryProcessing, botClient, _chatId, cts);
+            try {
+                if (string.IsNullOrWhiteSpace(_botToken))
+                {
+                    _chatId = "";
+                }
+                else
+                {
+                    var me = await botClient.GetMeAsync(cancellationToken: cts.Token);
+                    Console.WriteLine($"Start bot @{me.Username}");
+                }
+                while (!process.StandardOutput.EndOfStream)
+                {
+                    await service.ParseAndSend(process, queryProcessing, botClient, _chatId, cts);
+                }
+                await process.WaitForExitAsync(cts.Token);
+            } catch (Exception ex) {
+                Console.WriteLine("Problem with Bot: " + ex.Message);
+                cts.Cancel();
             }
-            await process.WaitForExitAsync(cts.Token);
         }
     }
 }
