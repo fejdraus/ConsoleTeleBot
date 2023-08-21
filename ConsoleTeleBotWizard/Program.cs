@@ -22,7 +22,6 @@ builder.Services.AddScoped<DatabaseService>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddAutoMapper(typeof(AppConfigProfile));
 builder.Services.AddAutoMapper(typeof(AppConfigViewProfile));
-builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 
 if (HybridSupport.IsElectronActive)

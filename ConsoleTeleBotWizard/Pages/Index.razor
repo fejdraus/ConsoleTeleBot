@@ -14,7 +14,7 @@
 @inject IMapper Mapper;
 
 <EditForm Model="@_modifiedConfigView" OnValidSubmit="@SaveConfiguration" novalidate>
-    <FluentValidator></FluentValidator>
+    <FluentValidationValidator/>
     <div class="d-flex justify-content-between mt-3">
         <button type="button" class="btn btn-success d-grid gap-2 d-md-flex justify-content-center btn-fixed-width me-2" @onclick="ExportAsync">Export</button>
         <button type="button" class="btn btn-success d-grid gap-2 d-md-flex justify-content-center btn-fixed-width me-2" @onclick="ImportAsync">Import</button>
