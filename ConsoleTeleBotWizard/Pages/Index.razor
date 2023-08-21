@@ -68,7 +68,7 @@
                     </div>
                     <div class="form-floating mb-3">
                         <InputText @bind-Value="_modifiedConfigView.BotConfigChatId" id="botConfigChatId" class="form-control" placeholder="Name Telegram contact or group" @oninput="HandleInputValueChanged"/>
-                        <label for="botConfigChatId">Telegram contact Id or group Id</label>
+                        <label for="botConfigChatId">Telegram public group name or Id</label>
                         <ValidationMessage For="() => _modifiedConfigView.BotConfigChatId"></ValidationMessage>
                     </div>
                     <div class="form-floating mb-3 mt-3">
