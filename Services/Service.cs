@@ -6,14 +6,14 @@ namespace Services;
 
 public class Service
 {
-    public async Task ParseAndSend(Process process1, List<ParsingRule> queryProcessings, TelegramBotClient telegramBotClient,
+    public async Task ParseAndSend(Process process, List<ParsingRule> queryProcessing, TelegramBotClient telegramBotClient,
         string? chatId, CancellationTokenSource cancellationTokenSource)
     {
-        var line = process1.StandardOutput.ReadLine();
+        var line = await process.StandardOutput.ReadLineAsync();
         Console.WriteLine(line);
-        if (line is not null)
+        if (line is not null && chatId != null)
         {
-            var queryProcessingRecord = queryProcessings.FirstOrDefault(qp => qp.ConsoleOutput != null && line.Contains(qp.ConsoleOutput));
+            var queryProcessingRecord = queryProcessing.FirstOrDefault(qp => qp.ConsoleOutput != null && line.Contains(qp.ConsoleOutput));
 
             if (queryProcessingRecord?.RegexPattern != null)
             {
@@ -34,10 +34,9 @@ public class Service
 
                     if (!string.IsNullOrWhiteSpace(result))
                     {
-                        if (chatId != null)
-                            await telegramBotClient.SendTextMessageAsync(chatId, result,
-                                disableNotification: queryProcessingRecord.QuietMessage,
-                                cancellationToken: cancellationTokenSource.Token);
+                        await telegramBotClient.SendTextMessageAsync(chatId, result,
+                            disableNotification: queryProcessingRecord.QuietMessage,
+                            cancellationToken: cancellationTokenSource.Token);
                     }
                 }
             }
