@@ -15,7 +15,6 @@ public class AppConfigViewProfile : Profile
             .ForPath(dest => dest.AppSettings.Arguments, opt => opt.MapFrom(c => c.AppSettingsArguments))
             .ForPath(dest => dest.AppSettings.WorkingDirectory, opt => opt.MapFrom(c => c.AppSettingsWorkingDirectory))
             .ForPath(dest => dest.Scheduler.CronExpression, opt => opt.MapFrom(c => c.SchedulerCronExpression))
-            .ForPath(dest => dest.Scheduler.StartDate, opt => opt.MapFrom(c => c.SchedulerStartDate))
-            .ForPath(dest => dest.Scheduler.StartTime, opt => opt.MapFrom(c => c.SchedulerStartTime));
+            .ForPath(dest => dest.Scheduler.StartDate, opt => opt.MapFrom(c => c.SchedulerStartDate.HasValue && c.SchedulerStartTime.HasValue ? c.SchedulerStartDate.Value.ToDateTime(c.SchedulerStartTime.Value) : (DateTime?)null));
     }
 }

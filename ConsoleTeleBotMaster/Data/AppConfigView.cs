@@ -4,10 +4,7 @@ namespace ConsoleTeleBotMaster.Data;
 
 public class AppConfigView : ICloneable
 {
-    [BotSettingsValidator]
     public string BotConfigToken { get; set; } = "";
-
-    [BotSettingsValidator]
     public string BotConfigChatId { get; set; } = "";
     
     [Required(ErrorMessage = "The \"Program\" field is required.")]
@@ -19,11 +16,9 @@ public class AppConfigView : ICloneable
     public string AppSettingsArguments { get; set; } = "";
     
     public string SchedulerCronExpression { get; set; } = "";
-    
-    [StartDateTimeValidator]
-    public DateOnly? SchedulerStartDate { get; set; }
 
-    [StartDateTimeValidator]
+    public DateOnly? SchedulerStartDate { get; set; }
+    
     public TimeOnly? SchedulerStartTime { get; set; }
 
     public object Clone()

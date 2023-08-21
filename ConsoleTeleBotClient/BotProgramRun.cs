@@ -10,8 +10,7 @@ public static class BotRun
 {
     public static async Task Execute(AppConfig appConfig, StartBot startBot, WebApplication webApplication)
     {
-        if (string.IsNullOrWhiteSpace(appConfig.Scheduler.CronExpression) &&
-            (appConfig.Scheduler.StartDate is null || appConfig.Scheduler.StartTime is null))
+        if (string.IsNullOrWhiteSpace(appConfig.Scheduler.CronExpression) && appConfig.Scheduler.StartDate is null)
         {
             await startBot.Execute();
         }
@@ -29,11 +28,9 @@ public static class BotRun
                         });
                 }
 
-                if (appConfig.Scheduler.StartDate is not null && appConfig.Scheduler.StartTime is not null)
+                if (appConfig.Scheduler.StartDate is not null)
                 {
-                    var startDateTimeString =
-                        appConfig.Scheduler.StartDate?.ToDateTime((TimeOnly)appConfig.Scheduler.StartTime) ??
-                        DateTime.MaxValue;
+                    var startDateTimeString = appConfig.Scheduler.StartDate ?? DateTime.MinValue;
                     if(startDateTimeString >= DateTime.Now)
                         BackgroundJob.Schedule(() => startBot.Execute(), startDateTimeString);
                 }

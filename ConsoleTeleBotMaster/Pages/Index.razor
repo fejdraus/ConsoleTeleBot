@@ -13,53 +13,43 @@
 @inject NavigationManager NavigationManager
 @inject IMapper Mapper;
 
-<div class="d-flex justify-content-between mt-3">
-    <button type="button" class="btn btn-success d-grid gap-2 d-md-flex justify-content-center btn-fixed-width me-2" @onclick="ExportAsync">Export</button>
-    <button type="button" class="btn btn-success d-grid gap-2 d-md-flex justify-content-center btn-fixed-width me-2" @onclick="ImportAsync">Import</button>
-</div>
-<div class="mt-3">
-    <Collapse @ref="_collapseExport">
-        <Card>
-            <CardBody class="d-flex justify-content-center">
-                <button type="button" class="btn btn-primary me-5 btn-fixed-width" @onclick='async () => await CreateFileCopy(new List<string>{"App.db"})'>Export rules</button>
-                <button type="button" class="btn btn-primary me-5 btn-fixed-width" @onclick='async () => await CreateFileCopy(new List<string>{"ConsoleTeleBotSettings.json"})'>Export settings</button>
-                <button type="button" class="btn btn-primary btn-fixed-width" @onclick='async () => await CreateFileCopy(new List<string>{"App.db", "ConsoleTeleBotSettings.json"})'>Export rules and settings</button>
-            </CardBody>
-        </Card>
-    </Collapse>
-</div>
-<div class="mt-3">
-    <Collapse @ref="_collapseImport">
-        <Card>
-            <CardBody class="d-flex justify-content-center">
-                @if (!_clearInputFile)
-                {
-                    <InputFile class="form-control me-2" OnChange="HandleFileSelected"/>
-                }
-                <button type="button" class="btn btn-primary btn-fixed-width" @onclick="async () => await ImportDatabase()">Import rules</button>
-            </CardBody>
-        </Card>
-    </Collapse>
-</div>
-<Tabs class="mt-4" NavStyle="NavStyle.Pills">
-    <Tab Title="Program and bot" IsActive="true">
-        <Content>
-            <EditForm Model="@_modifiedConfigView" OnValidSubmit="@SaveConfiguration">
-                <DataAnnotationsValidator/>
+<EditForm Model="@_modifiedConfigView" OnValidSubmit="@SaveConfiguration" novalidate>
+    <FluentValidator></FluentValidator>
+    <div class="d-flex justify-content-between mt-3">
+        <button type="button" class="btn btn-success d-grid gap-2 d-md-flex justify-content-center btn-fixed-width me-2" @onclick="ExportAsync">Export</button>
+        <button type="button" class="btn btn-success d-grid gap-2 d-md-flex justify-content-center btn-fixed-width me-2" @onclick="ImportAsync">Import</button>
+    </div>
+    <div class="mt-3">
+        <Collapse @ref="_collapseExport">
+            <Card>
+                <CardBody class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-primary me-5 btn-fixed-width" @onclick='async () => await CreateFileCopy(new List<string>{"App.db"})'>Export rules</button>
+                    <button type="button" class="btn btn-primary me-5 btn-fixed-width" @onclick='async () => await CreateFileCopy(new List<string>{"ConsoleTeleBotSettings.json"})'>Export settings</button>
+                    <button type="button" class="btn btn-primary btn-fixed-width" @onclick='async () => await CreateFileCopy(new List<string>{"App.db", "ConsoleTeleBotSettings.json"})'>Export rules and settings</button>
+                </CardBody>
+            </Card>
+        </Collapse>
+    </div>
+    <div class="mt-3">
+        <Collapse @ref="_collapseImport">
+            <Card>
+                <CardBody class="d-flex justify-content-center">
+                    @if (!_clearInputFile)
+                    {
+                        <InputFile class="form-control me-2" OnChange="HandleFileSelected"/>
+                    }
+                    <button type="button" class="btn btn-primary btn-fixed-width" @onclick="async () => await ImportDatabase()">Import rules</button>
+                </CardBody>
+            </Card>
+        </Collapse>
+    </div>
+    <Tabs class="mt-4" NavStyle="NavStyle.Pills">
+        <Tab Title="Program or script" IsActive="true">
+            <Content>
                 <labelrow>
                     <div class="form-floating mb-3 mt-3">
-                        <InputText @bind-Value="_modifiedConfigView.BotConfigToken" id="botConfigToken" class="form-control" placeholder="Telegram bot token" @oninput="HandleInputValueChanged"/>
-                        <label for="botConfigToken">Telegram bot token</label>
-                        <ValidationMessage For="@(() => _modifiedConfigView.BotConfigToken)" />
-                    </div>
-                    <div class="form-floating mb-3">
-                        <InputText @bind-Value="_modifiedConfigView.BotConfigChatId" id="botConfigChatId" class="form-control" placeholder="Name Telegram contact or group" @oninput="HandleInputValueChanged"/>
-                        <label for="botConfigChatId">Name Telegram contact or group</label>
-                        <ValidationMessage For="@(() => _modifiedConfigView.BotConfigChatId)" />
-                    </div>
-                    <div class="form-floating mb-3">
                         <InputText @bind-Value="_modifiedConfigView.AppSettingsAppPath" id="appSettingsAppPath" class="form-control" placeholder="Program" @oninput="HandleInputValueChanged"/>
-                        <label for="appSettingsAppPath">Program <span class="text-danger">*</span></label>
+                        <label for="appSettingsAppPath">Program or script <span class="text-danger">*</span></label>
                         <ValidationMessage For="@(() => _modifiedConfigView.AppSettingsAppPath)" />
                     </div>
                     <div class="form-floating mb-3">
@@ -71,117 +61,116 @@
                         <label for="appSettingsWorkingDirectory">Working directory <span class="text-danger">*</span></label>
                         <ValidationMessage For="@(() => _modifiedConfigView.AppSettingsWorkingDirectory)"/>
                     </div>
+                    <div class="form-floating mb-3 mt-3">
+                        <InputText @bind-Value="_modifiedConfigView.BotConfigToken" id="botConfigToken" class="form-control" placeholder="Telegram bot token" @oninput="HandleInputValueChanged"/>
+                        <label for="botConfigToken">Telegram bot token</label>
+                        <ValidationMessage For="() => _modifiedConfigView.BotConfigToken"></ValidationMessage>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <InputText @bind-Value="_modifiedConfigView.BotConfigChatId" id="botConfigChatId" class="form-control" placeholder="Name Telegram contact or group" @oninput="HandleInputValueChanged"/>
+                        <label for="botConfigChatId">Telegram contact Id or group Id</label>
+                        <ValidationMessage For="() => _modifiedConfigView.BotConfigChatId"></ValidationMessage>
+                    </div>
+                    <div class="form-floating mb-3 mt-3">
+                        <InputText @bind-Value="_modifiedConfigView.SchedulerCronExpression" id="appSettingsCronExpression" class="form-control" placeholder="Cron expression" @oninput="HandleInputValueChanged"/>
+                        <label for="appSettingsCronExpression">Cron expression</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <DateInput TValue="DateOnly?" @bind-Value="_modifiedConfigView.SchedulerStartDate" id="appSettingsStartDate" class="form-control" placeholder="Date start" Min="DateOnly.FromDateTime(DateTime.Now)" EnableMinMax="true" @oninput="HandleInputValueChanged"/>
+                        <label for="appSettingsStartDate">Date start</label>
+                        <ValidationMessage For="() => _modifiedConfigView.SchedulerStartDate"></ValidationMessage>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <TimeInput TValue="TimeOnly?" @bind-Value="_modifiedConfigView.SchedulerStartTime" id="appSettingsStartTime" class="form-control" placeholder="Time start" @oninput="HandleInputValueChanged"/>
+                        <label for="appSettingsStartTime">Time start</label>
+                        <ValidationMessage For="() => _modifiedConfigView.SchedulerStartTime"></ValidationMessage>
+                    </div>
                 </labelrow>
+                <div class="d-flex justify-content-between mt-3 mb-3">
+                    <button type="submit" class="btn btn-primary d-grid gap-2 d-md-flex justify-content-center btn-fixed-width">Save all configuration</button>
+                    <button type="button" class="btn btn-primary d-grid gap-2 d-md-flex justify-content-center btn-fixed-width" @onclick="Cancel" disabled="@(!_hasChanges)">All cancel</button>
+                </div>
+            </Content>
+        </Tab>
+        <Tab Title="Hunter">
+            <Content>
                 <div class="d-flex justify-content-between mt-3">
-                    <button type="submit" class="btn btn-primary d-grid gap-2 d-md-flex justify-content-center btn-fixed-width">Save configuration</button>
-                    <button type="button" class="btn btn-primary d-grid gap-2 d-md-flex justify-content-center btn-fixed-width" @onclick="Cancel" disabled="@(!HasChanges)">Cancel</button>
+                    <button type="button" class="btn btn-success d-grid gap-2 d-md-flex justify-content-center btn-fixed-width me-2" @onclick="async () => await OnEditModel(null)" >Add rule</button>
                 </div>
-            </EditForm>
-        </Content>
-    </Tab>
-    <Tab Title="Scheduler">
-        <Content>
-            <EditForm Model="@_modifiedConfigView" OnValidSubmit="SaveConfiguration">
-                <DataAnnotationsValidator/>
-                <div class="form-floating mb-3 mt-3">
-                    <InputText @bind-Value="_modifiedConfigView.SchedulerCronExpression" id="appSettingsCronExpression" class="form-control" placeholder="Cron expression" @oninput="HandleInputValueChanged"/>
-                    <label for="appSettingsCronExpression">Cron expression</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <DateInput TValue="DateOnly?" @bind-Value="_modifiedConfigView.SchedulerStartDate" id="appSettingsStartDate" class="form-control" placeholder="Date start" Min="DateOnly.FromDateTime(DateTime.Now)" EnableMinMax="true" @oninput="HandleInputValueChanged"/>
-                    <label for="appSettingsStartDate">Date start</label>
-                    <ValidationMessage For="@(() => _modifiedConfigView.SchedulerStartDate)" />
-                </div>
-                <div class="form-floating mb-3">
-                    <TimeInput TValue="TimeOnly?" @bind-Value="_modifiedConfigView.SchedulerStartTime" id="appSettingsStartTime" class="form-control" placeholder="Time start" @oninput="HandleInputValueChanged"/>
-                    <label for="appSettingsStartTime">Time start</label>
-                    <ValidationMessage For="@(() => _modifiedConfigView.SchedulerStartTime)" />
-                </div>
-                <div class="d-flex justify-content-between">
-                    <button type="submit" class="btn btn-primary d-grid gap-2 d-md-flex justify-content-center btn-fixed-width">Save configuration</button>
-                    <button type="button" class="btn btn-primary d-grid gap-2 d-md-flex justify-content-center btn-fixed-width" @onclick="Cancel" disabled="@(!HasChanges)">Cancel</button>
-                </div>
-            </EditForm>
-        </Content>
-    </Tab>
-    <Tab Title="Hunter">
-        <Content>
-            <div class="d-flex justify-content-between mt-3">
-                <button type="button" class="btn btn-success d-grid gap-2 d-md-flex justify-content-center btn-fixed-width me-2" @onclick="async () => await OnEditModel(null)" >Add rule</button>
-            </div>
-            <div class="mt-3 gridBody">
-                <Grid @ref="_grid"
-                      TItem="ParsingRule"
-                      Class="table table-hover table-bordered table-striped"
-                      DataProvider="RulesDataProvider"
-                      AllowPaging="true"
-                      PageSize="5"
-                      PageSizeSelectorVisible="true"
-                      PageSizeSelectorItems = "@(new [] { 5,10,20,30,50 })"
-                      PaginationItemsTextFormat = "{0} - {1} of {2} items"
-                      Responsive="true"
-                      AllowFiltering="true"
-                      ItemsPerPageText="Items per rage">
-                        
-                    <GridColumn TItem="ParsingRule" HeaderText="Console output" Context="gridContext" HeaderTextAlignment="Alignment.Center" PropertyName="ConsoleOutput">
-                        @gridContext.ConsoleOutput
-                    </GridColumn>
-                    <GridColumn TItem="ParsingRule" HeaderText="Regex pattern" Context="gridContext" HeaderTextAlignment="Alignment.Center" PropertyName="RegexPattern">
-                        @gridContext.RegexPattern
-                    </GridColumn>
-                    <GridColumn TItem="ParsingRule" HeaderText="Result massage" Context="gridContext" HeaderTextAlignment="Alignment.Center" PropertyName="Result">
-                        @gridContext.Result
-                    </GridColumn>
-                    <GridColumn TItem="ParsingRule" HeaderText="Quiet message" Context="gridContext" HeaderTextAlignment="Alignment.Center" PropertyName="QuietMessage">
-                        <ChildContent>
+                <div class="mt-3 gridBody">
+                    <Grid @ref="_grid"
+                          TItem="ParsingRule"
+                          Class="table table-hover table-bordered table-striped"
+                          DataProvider="RulesDataProvider"
+                          AllowPaging="true"
+                          PageSize="5"
+                          PageSizeSelectorVisible="true"
+                          PageSizeSelectorItems = "@(new [] { 5,10,20,30,50 })"
+                          PaginationItemsTextFormat = "{0} - {1} of {2} items"
+                          Responsive="true"
+                          AllowFiltering="true"
+                          ItemsPerPageText="Items per rage">
+                            
+                        <GridColumn TItem="ParsingRule" HeaderText="Console output" Context="gridContext" HeaderTextAlignment="Alignment.Center" PropertyName="ConsoleOutput">
+                            @gridContext.ConsoleOutput
+                        </GridColumn>
+                        <GridColumn TItem="ParsingRule" HeaderText="Regex pattern" Context="gridContext" HeaderTextAlignment="Alignment.Center" PropertyName="RegexPattern">
+                            @gridContext.RegexPattern
+                        </GridColumn>
+                        <GridColumn TItem="ParsingRule" HeaderText="Result massage" Context="gridContext" HeaderTextAlignment="Alignment.Center" PropertyName="Result">
+                            @gridContext.Result
+                        </GridColumn>
+                        <GridColumn TItem="ParsingRule" HeaderText="Quiet message" Context="gridContext" HeaderTextAlignment="Alignment.Center" PropertyName="QuietMessage">
+                            <ChildContent>
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-2">
+                                    <Switch @bind-Value="@gridContext.QuietMessage" Disabled="true"/>
+                                </div>
+                            </ChildContent>
+                        </GridColumn>
+                        <GridColumn TItem="ParsingRule" HeaderText="Action" HeaderTextAlignment="Alignment.Center" TextAlignment="Alignment.Center" Context="gridContext" Filterable="false">
                             <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-2">
-                                <Switch @bind-Value="@gridContext.QuietMessage" Disabled="true"/>
+                                <Button Color="ButtonColor.Primary" Size="Size.Small" @onclick="async () => await OnEditModel(gridContext)"> Edit </Button>
+                                <Button Color="ButtonColor.Danger" Size="Size.Small" @onclick="async () => await OnDeleteModel(gridContext)"> Delete </Button>
                             </div>
-                        </ChildContent>
-                    </GridColumn>
-                    <GridColumn TItem="ParsingRule" HeaderText="Action" HeaderTextAlignment="Alignment.Center" TextAlignment="Alignment.Center" Context="gridContext" Filterable="false">
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-2">
-                            <Button Color="ButtonColor.Primary" Size="Size.Small" @onclick="async () => await OnEditModel(gridContext)"> Edit </Button>
-                            <Button Color="ButtonColor.Danger" Size="Size.Small" @onclick="async () => await OnDeleteModel(gridContext)"> Delete </Button>
-                        </div>
-                    </GridColumn>
-                </Grid>
-            </div>
-        </Content>
-    </Tab>
-</Tabs>
-<Modal @ref="_modal" IsVerticallyCentered="true">
-    <BodyTemplate>
-        <labelrow>
-            <div class="form-floating mt-1">
-                <InputText @bind-Value="_parsingRule.ConsoleOutput" id="parsingRuleConsoleOutput" class="form-control" placeholder="Console output" disabled="@_parsingRule.IsDelete"/>
-                <label for="parsingRuleConsoleOutput">Console output</label>
-            </div>
-            <div class="form-floating mt-3">
-                <InputText @bind-Value="_parsingRule.RegexPattern" id="parsingRuleRegexPattern" class="form-control" placeholder="Regex pattern" disabled="@_parsingRule.IsDelete"/>
-                <label for="parsingRuleRegexPattern">Regex pattern</label>
-            </div>
-            <div class="form-floating mt-3">
-                <InputText @bind-Value="_parsingRule.Result" id="parsingRuleResult" class="form-control" placeholder="Result massage" disabled="@_parsingRule.IsDelete"/>
-                <label for="parsingRuleResult">Result massage</label>
-            </div>
-            <div class="mt-3 d-grid gap-2 d-md-flex justify-content-md-center">
-                <Switch @bind-Value="_parsingRule.QuietMessage" Label="Quiet message" Disabled="@_parsingRule.IsDelete"/>
-            </div>
-        </labelrow>
-    </BodyTemplate>
-    <FooterTemplate>
-        <button type="button" class="row btn btn-primary col" @onclick="async () => await OnHideRuleClick()">Close</button>
-        @if (_parsingRule.IsDelete)
-        {
-            <button class="row btn btn-outline-danger col" @onclick="async () => await OnDeleteClick()">Delete</button>
-        }
-        else
-        {
-            <button class="row btn btn-success col" @onclick="async () => await OnSaveClick()">Save</button>
-        }
-    </FooterTemplate>
-</Modal>
+                        </GridColumn>
+                    </Grid>
+                </div>
+            </Content>
+        </Tab>
+    </Tabs>
+    <Modal @ref="_modal" IsVerticallyCentered="true">
+        <BodyTemplate>
+            <labelrow>
+                <div class="form-floating mt-1">
+                    <InputText @bind-Value="_parsingRule.ConsoleOutput" id="parsingRuleConsoleOutput" class="form-control" placeholder="Console output" disabled="@_parsingRule.IsDelete"/>
+                    <label for="parsingRuleConsoleOutput">Console output</label>
+                </div>
+                <div class="form-floating mt-3">
+                    <InputText @bind-Value="_parsingRule.RegexPattern" id="parsingRuleRegexPattern" class="form-control" placeholder="Regex pattern" disabled="@_parsingRule.IsDelete"/>
+                    <label for="parsingRuleRegexPattern">Regex pattern</label>
+                </div>
+                <div class="form-floating mt-3">
+                    <InputText @bind-Value="_parsingRule.Result" id="parsingRuleResult" class="form-control" placeholder="Result massage" disabled="@_parsingRule.IsDelete"/>
+                    <label for="parsingRuleResult">Result massage</label>
+                </div>
+                <div class="mt-3 d-grid gap-2 d-md-flex justify-content-md-center">
+                    <Switch @bind-Value="_parsingRule.QuietMessage" Label="Quiet message" Disabled="@_parsingRule.IsDelete"/>
+                </div>
+            </labelrow>
+        </BodyTemplate>
+        <FooterTemplate>
+            <button type="button" class="row btn btn-primary col" @onclick="async () => await OnHideRuleClick()">Close</button>
+            @if (_parsingRule.IsDelete)
+            {
+                <button class="row btn btn-outline-danger col" @onclick="async () => await OnDeleteClick()">Delete</button>
+            }
+            else
+            {
+                <button class="row btn btn-success col" @onclick="async () => await OnSaveClick()">Save</button>
+            }
+        </FooterTemplate>
+    </Modal>
+</EditForm>
 <Toasts class="p-3" Messages="_messages" Placement="ToastsPlacement.TopRight" AutoHide="true" Delay="4000"/>
 @code
 {
@@ -196,13 +185,13 @@
     Collapse _collapseImport = default!;
     private IBrowserFile? _selectedFile;
     private bool _clearInputFile;
-    private bool HasChanges;
+    private bool _hasChanges;
 
     protected override async Task OnInitializedAsync()
     {
         _originalConfigView = Mapper.Map<AppConfigView>(await ConfigService.GetAppConfig());
         _modifiedConfigView = (AppConfigView)_originalConfigView.Clone();
-        HasChanges = false;
+        _hasChanges = false;
     }
 
     private async Task SaveConfiguration()
@@ -217,19 +206,19 @@
         var appSettingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ConsoleTeleBotSettings.json");
         await File.WriteAllTextAsync(appSettingsPath, newJson);
         _originalConfigView = (AppConfigView)_modifiedConfigView.Clone();
-        HasChanges = false;
+        _hasChanges = false;
         ShowMessage(ToastType.Success, "Settings saved");
     }
     
     private void Cancel()
     {
         _modifiedConfigView = (AppConfigView)_originalConfigView.Clone();
-        HasChanges = false;
+        _hasChanges = false;
     }
     
     private void HandleInputValueChanged(ChangeEventArgs e)
     {
-        HasChanges = true;
+        _hasChanges = true;
     }
     
     private void ShowMessage(ToastType toastType, string message) => _messages.Add(CreateToastMessage(toastType, message));

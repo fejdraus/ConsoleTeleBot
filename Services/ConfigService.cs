@@ -8,8 +8,6 @@ public class ConfigService : IConfigService
     {
         var configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ConsoleTeleBotSettings.json");
         var options = new JsonSerializerOptions();
-        options.Converters.Add(new DateOnlyConverter());
-        options.Converters.Add(new TimeOnlyConverter());
         if (!File.Exists(configFilePath))
         {
             var initialConfig = new AppConfig();

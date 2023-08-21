@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿/*using System.ComponentModel.DataAnnotations;
 using Services;
 
 namespace ConsoleTeleBotMaster.Data;
@@ -22,4 +22,4 @@ public class BotSettingsValidator : ValidationAttribute
         
         return ValidationResult.Success;
     }
-}
+}*/

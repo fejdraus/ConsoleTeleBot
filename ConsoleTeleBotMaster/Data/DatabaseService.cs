@@ -52,7 +52,7 @@ public class DatabaseService
                 foreach (var targetFilePath in targetFilePaths)
                 {
                     var fileName = Path.GetFileName(targetFilePath);
-                    var fileData = File.ReadAllBytes(targetFilePath);
+                    var fileData = await File.ReadAllBytesAsync(targetFilePath);
                     var fileDataStream = new MemoryStream(fileData);
                     archive.AddEntry(fileName, fileDataStream);
                     fileDataStreams.Add(fileDataStream);
@@ -60,7 +60,7 @@ public class DatabaseService
                 archive.SaveTo(archiveStream, CompressionType.Deflate);
                 foreach (var fileDataStream in fileDataStreams)
                 {
-                    fileDataStream.Dispose();
+                    await fileDataStream.DisposeAsync();
                 }
             }
         }

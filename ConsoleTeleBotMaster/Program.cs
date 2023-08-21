@@ -3,6 +3,7 @@ using BlazorBootstrap;
 using ConsoleTeleBotMaster.AutoMapperProfiles;
 using ConsoleTeleBotMaster.Data;
 using ElectronNET.API;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Services;
 
@@ -21,6 +22,7 @@ builder.Services.AddScoped<DatabaseService>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddAutoMapper(typeof(AppConfigProfile));
 builder.Services.AddAutoMapper(typeof(AppConfigViewProfile));
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 
 if (HybridSupport.IsElectronActive)
