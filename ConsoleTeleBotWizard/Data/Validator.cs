@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace ConsoleTeleBotMaster.Data;
+namespace ConsoleTeleBotWizard.Data;
 
 
 public class Validator : AbstractValidator<AppConfigView>

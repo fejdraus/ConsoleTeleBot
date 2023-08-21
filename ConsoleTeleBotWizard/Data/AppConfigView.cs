@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ConsoleTeleBotMaster.Data;
+namespace ConsoleTeleBotWizard.Data;
 
 public class AppConfigView : ICloneable
 {

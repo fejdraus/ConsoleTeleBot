@@ -1,7 +1,7 @@
 using System.Reflection;
 using BlazorBootstrap;
-using ConsoleTeleBotMaster.AutoMapperProfiles;
-using ConsoleTeleBotMaster.Data;
+using ConsoleTeleBotWizard.AutoMapperProfiles;
+using ConsoleTeleBotWizard.Data;
 using ElectronNET.API;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;

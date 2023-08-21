@@ -5,7 +5,7 @@ using Services;
 using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
 
-namespace ConsoleTeleBotMaster.Data;
+namespace ConsoleTeleBotWizard.Data;
 public class DatabaseService
 {
     private readonly IWebHostEnvironment _env;

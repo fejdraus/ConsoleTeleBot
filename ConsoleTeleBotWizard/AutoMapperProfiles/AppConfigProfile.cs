@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using ConsoleTeleBotMaster.Data;
+using ConsoleTeleBotWizard.Data;
 using Services;
 
-namespace ConsoleTeleBotMaster.AutoMapperProfiles;
+namespace ConsoleTeleBotWizard.AutoMapperProfiles;
 
 public class AppConfigProfile : Profile
 {

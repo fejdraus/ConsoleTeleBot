@@ -1,4 +1,6 @@
-﻿using Hangfire;
+﻿using System;
+using System.Threading.Tasks;
+using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

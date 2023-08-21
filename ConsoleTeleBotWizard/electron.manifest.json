@@ -1,15 +1,15 @@
 {
-  "executable": "ConsoleTeleBotMaster",
+  "executable": "ConsoleTeleBotWizard",
   "splashscreen": {
     "imageFile": ""
   },
-  "name": "ConsoleTeleBotMaster",
+  "name": "ConsoleTeleBotWizard",
   "author": "Oleksandr Tyra",
   "singleInstance": true,
   "environment": "Production",
   "build": {
-    "appId": "com.ConsoleTeleBotMaster.app",
-    "productName": "ConsoleTeleBotMaster",
+    "appId": "com.ConsoleTeleBotWizard.app",
+    "productName": "ConsoleTeleBotWizard",
     "copyright": "Copyright © 2023. Oleksandr Tyra, All Rights Reserved.",
     "buildVersion": "1.0.0",
     "compression": "maximum",

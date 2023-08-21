@@ -8,7 +8,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTeleBot", "ConsoleTe
 		{86D150DB-CB69-47D3-94BD-8B8BC6D8BF45} = {86D150DB-CB69-47D3-94BD-8B8BC6D8BF45}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTeleBotMaster", "ConsoleTeleBotMaster\ConsoleTeleBotMaster.csproj", "{36551BFA-E0A6-400B-969E-236F350CA8B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTeleBotWizard", "ConsoleTeleBotWizard\ConsoleTeleBotWizard.csproj", "{36551BFA-E0A6-400B-969E-236F350CA8B7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{86D150DB-CB69-47D3-94BD-8B8BC6D8BF45}"
 EndProject

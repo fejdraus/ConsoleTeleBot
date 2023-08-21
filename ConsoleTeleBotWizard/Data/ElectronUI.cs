@@ -1,7 +1,7 @@
 ﻿using ElectronNET.API;
 using ElectronNET.API.Entities;
 
-namespace ConsoleTeleBotMaster.Data;
+namespace ConsoleTeleBotWizard.Data;
 
 public class ElectronUi
 {

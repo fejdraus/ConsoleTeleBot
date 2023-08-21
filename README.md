@@ -4,7 +4,7 @@ The application launches console applications, intercepts their output, and comp
 
 Додаток запускає консольні програми, перехоплює їх вивід і порівнює його, використовуючи Regix правила, з базою даних правил. Після знаходження збігів, дані витягуються з рядка, використовуючи Regix і вставляються у текст відповіді. Результуюча відповідь відправляється в Telegram, використовуючи Telegram Bot API.
 
-To run the Electron.Net version of the "Setup Wizard", you need to run the following command in the ConsoleTeleBotMaster project folder:
+To run the Electron.Net version of the "Setup Wizard", you need to run the following command in the ConsoleTeleBotWizard project folder:
 ```
 dotnet electronize start
 ```
