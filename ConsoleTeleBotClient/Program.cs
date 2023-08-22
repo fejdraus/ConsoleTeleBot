@@ -32,9 +32,8 @@ using var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 var startBot = new StartBot(context, settingsConfiguration);
 
-app.UseHangfireDashboard("/planner", new DashboardOptions {
+app.UseHangfireDashboard("", new DashboardOptions {
     DashboardTitle = "ConsoleTeleBot",
-    AppPath = "/planner",
     Authorization = new[] { new HangfireOpenAuthorizationFilter() }
 });
 
