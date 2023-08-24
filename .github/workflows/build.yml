@@ -27,11 +27,18 @@ jobs:
         dotnet build ConsoleTeleBotClient/ConsoleTeleBot.csproj --configuration Release
         dotnet build ConsoleMock/ConsoleMock.csproj --configuration Release
 
-    - name: Upload Console build artifacts
+    - name: Upload Console build artifact for ConsoleTeleBotClient
       uses: actions/upload-artifact@v2
       with:
-        name: myapp-console
-        path: path/to/your/console/build/files
+        name: ConsoleTeleBotClient
+        path: ConsoleTeleBotClient/bin/Release/net6.0
+    
+    - name: Upload Console build artifact for ConsoleMock
+      uses: actions/upload-artifact@v2
+      with:
+        name: ConsoleMock
+        path: ConsoleMock/bin/Release/net6.0
+      
 
     - name: Install Electron.NET CLI
       run: dotnet tool install ElectronNET.CLI -g
