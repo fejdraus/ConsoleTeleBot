@@ -24,6 +24,7 @@ jobs:
 
     - name: Build Console Projects
       run: |
+        dotnet restore
         dotnet build --configuration Release
 
     - name: Setup Node.js
