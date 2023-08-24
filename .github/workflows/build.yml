@@ -27,6 +27,12 @@ jobs:
         dotnet build ConsoleTeleBotClient/ConsoleTeleBot.csproj --configuration Release
         dotnet build ConsoleMock/ConsoleMock.csproj --configuration Release
 
+    - name: Upload Console build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: myapp-console
+        path: path/to/your/console/build/files
+
     - name: Install Electron.NET CLI
       run: dotnet tool install ElectronNET.CLI -g
 
@@ -49,3 +55,4 @@ jobs:
         cd ConsoleTeleBotWizard
         dotnet restore
         electronize build /target osx /PublishReadyToRun false
+      
