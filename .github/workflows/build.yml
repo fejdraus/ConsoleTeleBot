@@ -1,0 +1,44 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup .NET 6
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Build Console Projects
+      run: |
+        dotnet build ConsoleTeleBotClient/ConsoleTeleBotClient.csproj --configuration Release
+        dotnet build ConsoleMock/ConsoleMock.csproj --configuration Release
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install Electron Globally
+      run: npm install electron -g
+
+    - name: Build Electron.Net + Blazor Project
+      run: |
+        cd ConsoleTeleBotWizard
+        dotnet restore
+        dotnet electronize build /target win
+        dotnet electronize build /target linux
+        dotnet electronize build /target osx
