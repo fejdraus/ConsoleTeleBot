@@ -34,5 +34,4 @@ jobs:
       if: matrix.os == 'windows-latest'
       run: |
         cd ConsoleTeleBotWizard
-        dotnet restore
-        dotnet electronize build /target win
+        electronize build /target win /PublishReadyToRun false
