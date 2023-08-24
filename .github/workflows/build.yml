@@ -35,10 +35,23 @@ jobs:
     - name: Install Electron Globally
       run: npm install electron -g
 
-    - name: Build Electron.Net + Blazor Project
+    - name: Build Electron.Net + Blazor Project for Windows
+      if: matrix.os == 'windows-latest'
       run: |
         cd ConsoleTeleBotWizard
         dotnet restore
         dotnet electronize build /target win
+    
+    - name: Build Electron.Net + Blazor Project for Linux
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        cd ConsoleTeleBotWizard
+        dotnet restore
         dotnet electronize build /target linux
+    
+    - name: Build Electron.Net + Blazor Project for macOS
+      if: matrix.os == 'macos-latest'
+      run: |
+        cd ConsoleTeleBotWizard
+        dotnet restore
         dotnet electronize build /target osx
