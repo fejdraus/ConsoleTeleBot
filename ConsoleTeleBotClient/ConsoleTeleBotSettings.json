@@ -1,0 +1,15 @@
+﻿{
+    "BotConfig": {
+        "Token": "",
+        "ChatId": ""
+    },
+    "AppSettings": {
+        "AppPath": "",
+        "Arguments": "",
+        "WorkingDirectory": ""
+    },
+    "Scheduler": {
+        "CronExpression": "",
+        "StartDate": ""
+    }
+}
