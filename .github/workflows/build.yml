@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [windows-latest, ubuntu-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v2
@@ -35,3 +35,17 @@ jobs:
       run: |
         cd ConsoleTeleBotWizard
         electronize build /target win /PublishReadyToRun false
+
+    - name: Build Electron.Net + Blazor Project for Linux
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        cd ConsoleTeleBotWizard
+        dotnet restore
+        electronize build /target linux /PublishReadyToRun false
+      
+    - name: Build Electron.Net + Blazor Project for macOS
+      if: matrix.os == 'macos-latest'
+      run: |
+        cd ConsoleTeleBotWizard
+        dotnet restore
+        electronize build /target osx /PublishReadyToRun false
