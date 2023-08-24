@@ -24,8 +24,7 @@ jobs:
 
     - name: Build Console Projects
       run: |
-        dotnet build ConsoleTeleBotClient/ConsoleTeleBotClient.csproj --configuration Release
-        dotnet build ConsoleMock/ConsoleMock.csproj --configuration Release
+        dotnet build --configuration Release
 
     - name: Setup Node.js
       uses: actions/setup-node@v2
@@ -37,7 +36,6 @@ jobs:
 
     - name: Build Electron.Net + Blazor Project
       run: |
-        cd ConsoleTeleBot
         cd ConsoleTeleBotWizard
         dotnet restore
         dotnet electronize build /target win
