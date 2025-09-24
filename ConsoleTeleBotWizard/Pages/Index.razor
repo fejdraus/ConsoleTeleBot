@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 @using Services
 @using System.Text.Json
 @using Microsoft.EntityFrameworkCore
@@ -53,7 +53,7 @@
                         <ValidationMessage For="@(() => _modifiedConfigView.AppSettingsAppPath)" />
                     </div>
                     <div class="form-floating mb-3">
-                        <InputText @bind-Value="_modifiedConfigView.AppSettingsArguments" id="appSettingsArguments" class="form-control" placeholder="Arguments"  @oninput="@HandleInputValueChanged"/>
+                        @* <InputText @bind-Value="_modifiedConfigView.AppSettingsArguments" id="appSettingsArguments" class="form-control" placeholder="Arguments"  @oninput="@HandleInputValueChanged"/> *@
                         <label for="appSettingsArguments">Arguments</label>
                     </div>
                     <div class="form-floating">
@@ -110,10 +110,6 @@
                           Responsive="true"
                           AllowFiltering="true"
                           ItemsPerPageText="Items per rage">
-                            
-                        <GridColumn TItem="ParsingRule" HeaderText="Console output" Context="gridContext" HeaderTextAlignment="Alignment.Center" PropertyName="ConsoleOutput">
-                            @gridContext.ConsoleOutput
-                        </GridColumn>
                         <GridColumn TItem="ParsingRule" HeaderText="Regex pattern" Context="gridContext" HeaderTextAlignment="Alignment.Center" PropertyName="RegexPattern">
                             @gridContext.RegexPattern
                         </GridColumn>
@@ -129,8 +125,8 @@
                         </GridColumn>
                         <GridColumn TItem="ParsingRule" HeaderText="Action" HeaderTextAlignment="Alignment.Center" TextAlignment="Alignment.Center" Context="gridContext" Filterable="false">
                             <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-2">
-                                <Button Color="ButtonColor.Primary" Size="Size.Small" @onclick="async () => await OnEditModel(gridContext)"> Edit </Button>
-                                <Button Color="ButtonColor.Danger" Size="Size.Small" @onclick="async () => await OnDeleteModel(gridContext)"> Delete </Button>
+                                <Button Color="ButtonColor.Primary" @onclick="async () => await OnEditModel(gridContext)"> Edit </Button>
+                                <Button Color="ButtonColor.Danger" @onclick="async () => await OnDeleteModel(gridContext)"> Delete </Button>
                             </div>
                         </GridColumn>
                     </Grid>
@@ -141,10 +137,6 @@
     <Modal @ref="_modal" IsVerticallyCentered="true">
         <BodyTemplate>
             <labelrow>
-                <div class="form-floating mt-1">
-                    <InputText @bind-Value="_parsingRule.ConsoleOutput" id="parsingRuleConsoleOutput" class="form-control" placeholder="Console output" disabled="@_parsingRule.IsDelete"/>
-                    <label for="parsingRuleConsoleOutput">Console output</label>
-                </div>
                 <div class="form-floating mt-3">
                     <InputText @bind-Value="_parsingRule.RegexPattern" id="parsingRuleRegexPattern" class="form-control" placeholder="Regex pattern" disabled="@_parsingRule.IsDelete"/>
                     <label for="parsingRuleRegexPattern">Regex pattern</label>
@@ -258,7 +250,6 @@
         if (rule is null)
         {
             _parsingRule.Id = Guid.NewGuid();
-            _parsingRule.ConsoleOutput = "";
             _parsingRule.RegexPattern = "";
             _parsingRule.Result = "";
             _parsingRule.QuietMessage = false;
@@ -267,7 +258,6 @@
         else
         {
             _parsingRule.Id = rule.Id;
-            _parsingRule.ConsoleOutput = rule.ConsoleOutput;
             _parsingRule.RegexPattern = rule.RegexPattern;
             _parsingRule.Result = rule.Result;
             _parsingRule.QuietMessage = rule.QuietMessage;
@@ -279,7 +269,6 @@
     private async Task OnDeleteModel(ParsingRule rule)
     {
         _parsingRule.Id = rule.Id;
-        _parsingRule.ConsoleOutput = rule.ConsoleOutput;
         _parsingRule.RegexPattern = rule.RegexPattern;
         _parsingRule.Result = rule.Result;
         _parsingRule.QuietMessage = rule.QuietMessage;
@@ -319,7 +308,6 @@
         else
         {
             ruleInList.QuietMessage = _parsingRule.QuietMessage;
-            ruleInList.ConsoleOutput = _parsingRule.ConsoleOutput;
             ruleInList.RegexPattern = _parsingRule.RegexPattern;
             ruleInList.Result = _parsingRule.Result;
             context.ParsingRules.Update(ruleInList);

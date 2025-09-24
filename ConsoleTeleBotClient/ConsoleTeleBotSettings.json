@@ -4,9 +4,16 @@
         "ChatId": ""
     },
     "AppSettings": {
-        "AppPath": "",
-        "Arguments": "",
-        "WorkingDirectory": ""
+        "AppPath": "D:\\GitHub\\MyRepository\\ConsoleTeleBot\\ConsoleMock\\bin\\Release\\net8.0\\win-x64\\publish\\ConsoleMock.exe",
+        "Arguments": [
+            "-NoProfile",
+            "-ExecutionPolicy Bypass",
+            "-File Main.ps1",
+            "-siteIISName \"Creatio7\"",
+            "-login \"TSISupervisor\"",
+            "-password \"BNZ*43#tsi\""
+        ],
+        "WorkingDirectory": "D:\\GitHub\\MyRepository\\ConsoleTeleBot\\ConsoleMock\\bin\\Release\\net8.0\\win-x64\\publish\\"
     },
     "Scheduler": {
         "CronExpression": "",

@@ -1,11 +1,10 @@
-﻿using System;
-using ConsoleTeleBot;
+﻿using ConsoleTeleBot;
 using Hangfire;
-using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Services;
 
 IConfiguration GetConfiguration(string fileName)
@@ -24,13 +23,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton(settingsConfiguration);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(appSettingsConfiguration.GetConnectionString("DbConnection")));
-builder.Services.AddHangfire(config => config.UseMemoryStorage());
+builder.Services.AddHangfire(config => config.UseInMemoryStorage());
 builder.Services.AddHangfireServer();
 var app = builder.Build();
 
 using var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-var startBot = new StartBot(context, settingsConfiguration);
+using var loggerFactory = LoggerFactory.Create(loggingBuilder =>
+{
+    loggingBuilder.AddConsole();
+});
+var logger = loggerFactory.CreateLogger<StartBot>();
+var startBot = new StartBot(context, settingsConfiguration, logger);
 
 app.UseHangfireDashboard("", new DashboardOptions {
     DashboardTitle = "ConsoleTeleBot",

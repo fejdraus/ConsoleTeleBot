@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Hangfire;
+﻿using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -14,7 +12,7 @@ public static class BotRun
     {
         if (string.IsNullOrWhiteSpace(appConfig.Scheduler.CronExpression) && appConfig.Scheduler.StartDate is null)
         {
-            await startBot.Execute();
+            await startBot.ExecuteAsync();
         }
         else
         {
@@ -23,7 +21,7 @@ public static class BotRun
                 if (!string.IsNullOrWhiteSpace(appConfig.Scheduler.CronExpression))
                 {
                     var recurringJobManager = webApplication.Services.GetRequiredService<IRecurringJobManager>();
-                    recurringJobManager.AddOrUpdate("StartBot", () => startBot.Execute(),
+                    recurringJobManager.AddOrUpdate("StartBot", () => startBot.ExecuteAsync(CancellationToken.None),
                         appConfig.Scheduler.CronExpression, new RecurringJobOptions
                         {
                             TimeZone = TimeZoneInfo.Local
@@ -34,7 +32,7 @@ public static class BotRun
                 {
                     var startDateTimeString = appConfig.Scheduler.StartDate ?? DateTime.MinValue;
                     if(startDateTimeString >= DateTime.Now)
-                        BackgroundJob.Schedule(() => startBot.Execute(), startDateTimeString);
+                        BackgroundJob.Schedule(() => startBot.ExecuteAsync(CancellationToken.None), startDateTimeString);
                 }
             });
         }

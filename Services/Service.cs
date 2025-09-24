@@ -1,45 +1,34 @@
-﻿using System.Diagnostics;
-using System.Text.RegularExpressions;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 
 namespace Services;
 
 public class Service
 {
-    public async Task ParseAndSend(Process process, List<ParsingRule> queryProcessing, TelegramBotClient telegramBotClient,
-        string? chatId, CancellationTokenSource cancellationTokenSource)
+    public async Task ParseAndSend(string line, List<ParsingRule> queryProcessing, TelegramBotClient? telegramBotClient,
+        string? chatId, CancellationToken cancellationToken)
     {
-        var line = await process.StandardOutput.ReadLineAsync();
-        Console.WriteLine(line);
-        if (line is not null && chatId != null)
+        try
         {
-            var queryProcessingRecord = queryProcessing.FirstOrDefault(qp => qp.ConsoleOutput != null && line.Contains(qp.ConsoleOutput));
-
-            if (queryProcessingRecord?.RegexPattern != null)
+            Console.WriteLine(line);
+            if (!string.IsNullOrWhiteSpace(chatId) && telegramBotClient != null)
             {
-                var match = Regex.Match(line, queryProcessingRecord.RegexPattern);
-                if (match.Success)
+                var queryProcessingRecord = queryProcessing.FirstOrDefault(qp => !string.IsNullOrWhiteSpace(line) && qp.CompiledRegex.IsMatch(line));
+
+                if (queryProcessingRecord?.CompiledRegex != null && !string.IsNullOrWhiteSpace(queryProcessingRecord.Result))
                 {
-                    var replacements = new Dictionary<string, string>();
-                    for (int i = 1; i < match.Groups.Count; i++)
-                    {
-                        replacements.Add($"{{m.Groups[{i}].Value}}", match.Groups[i].Value);
-                    }
-
-                    var result = queryProcessingRecord.Result;
-                    foreach (var replacement in replacements)
-                    {
-                        result = result?.Replace(replacement.Key, replacement.Value);
-                    }
-
+                    var result = queryProcessingRecord.CompiledRegex.Replace(line, queryProcessingRecord.Result);
                     if (!string.IsNullOrWhiteSpace(result))
                     {
-                        await telegramBotClient.SendTextMessageAsync(chatId, result,
+                        await telegramBotClient.SendMessage(chatId, result,
                             disableNotification: queryProcessingRecord.QuietMessage,
-                            cancellationToken: cancellationTokenSource.Token);
+                            cancellationToken: cancellationToken);
                     }
                 }
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,72 +1,95 @@
-﻿using Telegram.Bot.Exceptions;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
+﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
+using Microsoft.Extensions.Logging;
+using Telegram.Bot;
 
 namespace Services;
 
-using System.Diagnostics;
-using Telegram.Bot;
-
-public class StartBot
+public partial class StartBot(ApplicationDbContext applicationDbContext, AppConfig appConfig, ILogger<StartBot> logger)
 {
-    private readonly ApplicationDbContext _applicationDbContext;
-    private readonly string _botToken;
-    private readonly string _appSettingPath;
-    private readonly string _workingDirectory;
-    private readonly string _arguments;
-    private string _chatId;
-
-    public StartBot(ApplicationDbContext applicationDbContext, AppConfig appConfig)
+    private readonly ApplicationDbContext _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+    private readonly AppConfig _appConfig = appConfig ?? throw new ArgumentNullException(nameof(appConfig));
+    private readonly ILogger<StartBot> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    private TelegramBotClient? _botClient = null;
+    public async Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        _applicationDbContext = applicationDbContext;
-        _botToken = appConfig.BotConfig.Token;
-        _appSettingPath = appConfig.AppSettings.AppPath;
-        _workingDirectory = appConfig.AppSettings.WorkingDirectory;
-        _arguments = appConfig.AppSettings.Arguments;
-        _chatId = appConfig.BotConfig.ChatId;
-    }
-    public async Task Execute()
-    {
-        using CancellationTokenSource cts = new ();
-        if (!string.IsNullOrWhiteSpace(_appSettingPath) && !string.IsNullOrWhiteSpace(_workingDirectory))
+        if (string.IsNullOrWhiteSpace(_appConfig.AppSettings.AppPath))
         {
-            var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = _appSettingPath,
-                    Arguments = _arguments,
-                    WorkingDirectory = _workingDirectory,
-                    RedirectStandardOutput = true,
-                    UseShellExecute = false,
-                }
-            };
+            _logger.LogError("AppPath is not set.");
+            return;
+        }
 
-            process.Start();
-    
-            var service = new Service();
-            var queryProcessing = _applicationDbContext.ParsingRules.ToList();
-            _chatId = string.IsNullOrWhiteSpace(_botToken) ? "" : _chatId;
-            var botClient = new TelegramBotClient(_botToken);
-            try {
-                if (string.IsNullOrWhiteSpace(_botToken))
-                {
-                    _chatId = "";
-                }
-                else
-                {
-                    var me = await botClient.GetMeAsync(cancellationToken: cts.Token);
-                    Console.WriteLine($"Start bot @{me.Username}");
-                }
-                while (!process.StandardOutput.EndOfStream)
-                {
-                    await service.ParseAndSend(process, queryProcessing, botClient, _chatId, cts);
-                }
-                await process.WaitForExitAsync(cts.Token);
-            } catch (Exception ex) {
-                Console.WriteLine("Problem with Bot: " + ex.Message);
-                cts.Cancel();
+        using var process = CreateProcess();
+        process.Start();
+
+        var service = new Service();
+        var queryProcessing = _applicationDbContext.ParsingRules.ToList();
+        
+
+        try
+        {
+            if (!string.IsNullOrWhiteSpace(_appConfig.BotConfig.Token))
+            {
+                _botClient = new TelegramBotClient(_appConfig.BotConfig.Token);
+                await InitializeBotAsync(cancellationToken);
             }
+            
+            await ProcessOutputAsync(process, service, queryProcessing, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Problem with Bot: {Message}", ex.Message);
+        }
+        finally
+        {
+            await process.WaitForExitAsync(cancellationToken);
         }
     }
+
+    private Process CreateProcess()
+    {
+        return new Process
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = _appConfig.AppSettings.AppPath,
+                Arguments = FormatArguments(_appConfig.AppSettings.Arguments),
+                WorkingDirectory = string.IsNullOrWhiteSpace(_appConfig.AppSettings.WorkingDirectory) ? 
+                    AppContext.BaseDirectory : _appConfig.AppSettings.WorkingDirectory,
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+            }
+        };
+    }
+
+    private async Task InitializeBotAsync(CancellationToken cancellationToken)
+    {
+        if (_botClient != null && !string.IsNullOrWhiteSpace(_appConfig.BotConfig.Token))
+        {
+            var me = await _botClient.GetMe(cancellationToken);
+            _logger.LogInformation("Start bot @{Username}", me.Username);
+        }
+        else
+        {
+            _logger.LogWarning("Bot token is not set.");
+        }
+    }
+
+    private async Task ProcessOutputAsync(Process process, Service service, List<ParsingRule> queryProcessing, CancellationToken cancellationToken)
+    {
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        while (!process.StandardOutput.EndOfStream)
+        {
+            var line = await process.StandardOutput.ReadLineAsync(cts.Token);
+            if (!string.IsNullOrWhiteSpace(line)) await service.ParseAndSend(line, queryProcessing, _botClient, _appConfig.BotConfig.ChatId, cts.Token);
+        }
+    }
+
+    private string FormatArguments(IEnumerable<string> arguments)
+    {
+        return MyRegex().Replace(string.Join(" ", arguments).Trim(), " ");
+    }
+
+    [GeneratedRegex(@"\s+")]
+    private static partial Regex MyRegex();
 }

@@ -1,4 +1,3 @@
-using System.Reflection;
 using ConsoleTeleBotWizard.AutoMapperProfiles;
 using ConsoleTeleBotWizard.Data;
 using ElectronNET.API;
@@ -17,10 +16,11 @@ builder.Services.AddElectron();
 builder.WebHost.UseElectron(args);
 builder.Services.AddBlazorBootstrap();
 builder.Services.AddScoped<DatabaseService>();
-builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-builder.Services.AddAutoMapper(typeof(AppConfigProfile));
-builder.Services.AddAutoMapper(typeof(AppConfigViewProfile));
-
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<AppConfigProfile>();
+    cfg.AddProfile<AppConfigViewProfile>();
+});
 
 if (HybridSupport.IsElectronActive)
 {
@@ -48,3 +48,6 @@ app.UseRouting();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 app.Run();
+
+
+

@@ -10,7 +10,7 @@ public class AppConfigView : ICloneable
     public string AppSettingsAppPath { get; set; } = "";
     public string AppSettingsWorkingDirectory { get; set; } = "";
     
-    public string AppSettingsArguments { get; set; } = "";
+    public string[] AppSettingsArguments { get; set; } = [];
     
     public string SchedulerCronExpression { get; set; } = "";
 
@@ -26,7 +26,7 @@ public class AppConfigView : ICloneable
             BotConfigChatId = this.BotConfigChatId,
             AppSettingsAppPath = this.AppSettingsAppPath,
             AppSettingsWorkingDirectory = this.AppSettingsWorkingDirectory,
-            AppSettingsArguments = this.AppSettingsArguments,
+            AppSettingsArguments =  this.AppSettingsArguments,
             SchedulerCronExpression = this.SchedulerCronExpression,
             SchedulerStartDate = this.SchedulerStartDate,
             SchedulerStartTime = this.SchedulerStartTime

@@ -1,3 +1,8 @@
+21:15:31.9071 ## Starting installation: 07/30/2024 09:59:48 ##
+21:15:31.9071 ## Stop pools ##
+Write-Output "### Application pool Site1 stopped successfully on Server1 ###"
+Write-Output "### Application pool Site1 is already stopped on Server1 ###"
+Write-Error "### Failed to stop the application pool Site1 on server Server1. Error: текст ошибки по остановке пула ###"
 PS D:\TestDownload\tempFolder\Updater> .\ConsoleTeleBot.exe
 21:15:31.7084 Current Updater version: '2.0.0.0'
 
@@ -8410,3 +8415,4 @@ Installing data: SysModuleEdit_PageTemplate from package UIv2
 Installing data: SysModuleEdit_Relationship from package UIv2
 Installing data: SysModuleEdit_RuleRelation from package UIv2
 Installing data: SysModuleEdit_SysAdminOperation from package UIv2
+### Script execution time: 5 hours, 10 minutes, 50 seconds ###
